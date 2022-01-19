@@ -19,6 +19,7 @@ public class Ej5_CristianG {
         nClientes=(int) Utilidad.pedirNumeroEntero("Introduce el numero de clientes: ",1 );
         miEmpresa=new Empresa(nClientes);
         miEmpresa.pedirClientes();
+        miEmpresa.informe();
         
     }
     
