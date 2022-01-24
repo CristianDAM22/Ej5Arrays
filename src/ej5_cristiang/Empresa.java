@@ -58,5 +58,8 @@ public class Empresa {
             System.out.println("\t"+vencimiento.fechaMesLetra());
         }
     }
+    public float busqueda(int diasVenciemiento){
+        
+    }
 
 }
