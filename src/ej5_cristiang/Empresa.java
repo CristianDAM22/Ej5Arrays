@@ -48,10 +48,19 @@ public class Empresa {
         float descuento;
         float importeNeto;
         int pos;
+        int annoSig=fhoy.getAnno();
+        int mesSig=fhoy.getMes()+1;
+        
+        if(mesSig>11){
+            annoSig++;
+            mesSig=0;//ENERO
+        }
+        
         System.out.println("\t\t\t\tINFORME DE FACTURAS");
         System.out.println("Fecha:" + fhoy.fechaMesLetra());
         System.out.println("CIF \t NOMBRE\t FECHA FACTURA\t"
                 + " IMPORTE BRUTO \t FECHA VENCIMIENTO\t IMPORTE NETO");
+        
         for (int ncli = 0; ncli < clientes.length; ncli++) {
             pos = (int) busqueda(clientes[ncli].getDiasVencimiento());
             if (pos == -1) {
@@ -67,16 +76,22 @@ public class Empresa {
                     clientes[ncli].getFechaFactura().getAnno());
 
             vencimiento.calcularVencimiento(clientes[ncli].getDiasVencimiento());
-
+            
+            if(importeNeto>10000 && vencimiento.getMes()==mesSig && vencimiento.getAnno()==annoSig){//No entiendo lo de =
+                
             System.out.print(clientes[ncli].getCIF());
             System.out.print("\t" + clientes[ncli].getNombre());
             System.out.print("\t"
-                    + clientes[ncli].getFechaFactura().fechaMesLetra());
+                    + clientes[ncli].getFechaFactura().fechaComepleta());
 
             System.out.print("\t" + clientes[ncli].getImporte());
-            System.out.print("\t\t" + vencimiento.fechaMesLetra());
+            System.out.print("\t\t" + vencimiento.fechaComepleta());
             System.out.println("\t"+ importeNeto);
-
+            }
+            
+            else{
+                System.out.println("FACTURAS NO CUMPLEN LOS REQUISITOS (10000€)");
+            }
         }
     }
     /**
