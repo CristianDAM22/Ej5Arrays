@@ -30,36 +30,75 @@ public class Empresa {
         float importe;
         int diasVencimiento;
         Fecha fecha;
-        for (int nCliente = 0; nCliente < clientes.length;nCliente++) {
-            
-            cif=Utilidad.pedirString("Dime el CIF: ");
-            nombre=Utilidad.pedirString("Dime el nombre: ");
-            diasVencimiento=(int) Utilidad.pedirNumeroEntero("Dias de vencimirnto",0);
-            fecha =Utilidad.pedirFecha("Fecha:");
-            importe=Utilidad.pedirNumeroReal("Dime el importe de la factura: ", 0f);
-            clientes[nCliente] = new Cliente (cif, nombre, fecha, diasVencimiento, importe); 
-            
+        for (int nCliente = 0; nCliente < clientes.length; nCliente++) {
+
+            cif = Utilidad.pedirString("Dime el CIF: ");
+            nombre = Utilidad.pedirString("Dime el nombre: ");
+            diasVencimiento = (int) Utilidad.pedirNumeroEntero("Dias de vencimirnto", 0);
+            fecha = Utilidad.pedirFecha("Fecha:");
+            importe = Utilidad.pedirNumeroReal("Dime el importe de la factura: ", 0f);
+            clientes[nCliente] = new Cliente(cif, nombre, fecha, diasVencimiento, importe);
+
         }
     }
-    public void informe(){
-        Fecha fhoy=new Fecha();
-        System.out.println("\t\t\t INFORME DE FACTURA:");
-        System.out.println("Fecha: "+fhoy.fechaMesLetra());
-        System.out.println("CIF \t NOMBRE \t FECHA FACTURA \t IMPORTE BRUTO \t FECHA VENCIMEIENTO \t IMPORTE NETO");
-        for (int ncli=0;ncli<clientes.length;ncli++){
-            Fecha vencimiento= new Fecha(clientes[ncli].getFechaFactura().getDia(),
-                                         clientes[ncli].getFechaFactura().getMes(),
-                                         clientes[ncli].getFechaFactura().getAnno());
+
+    public void informe() {
+
+         Fecha fhoy = new Fecha();
+        float descuento;
+        float importeNeto;
+        int pos;
+        System.out.println("\t\t\t\tINFORME DE FACTURAS");
+        System.out.println("Fecha:" + fhoy.fechaMesLetra());
+        System.out.println("CIF \t NOMBRE\t FECHA FACTURA\t"
+                + " IMPORTE BRUTO \t FECHA VENCIMIENTO\t IMPORTE NETO");
+        for (int ncli = 0; ncli < clientes.length; ncli++) {
+            pos = (int) busqueda(clientes[ncli].getDiasVencimiento());
+            if (pos == -1) {
+                descuento = 0;
+            } else {
+                descuento = clientes[ncli].getImporte()
+                        * descuentos[pos].getDescuento();
+            }
+            importeNeto=clientes[ncli].getImporte()-descuento;
+            Fecha vencimiento = new Fecha(
+                    clientes[ncli].getFechaFactura().getDia(),
+                    clientes[ncli].getFechaFactura().getMes(),
+                    clientes[ncli].getFechaFactura().getAnno());
+
             vencimiento.calcularVencimiento(clientes[ncli].getDiasVencimiento());
-            System.out.println("\t"+clientes[ncli].getCIF());
-            System.out.println("\t"+clientes[ncli].getNombre());
-            System.out.println("\t"+clientes[ncli].getFechaFactura().fechaMesLetra());
-            System.out.println("\t"+clientes[ncli].getImporte());
-            System.out.println("\t"+vencimiento.fechaMesLetra());
+
+            System.out.print(clientes[ncli].getCIF());
+            System.out.print("\t" + clientes[ncli].getNombre());
+            System.out.print("\t"
+                    + clientes[ncli].getFechaFactura().fechaMesLetra());
+
+            System.out.print("\t" + clientes[ncli].getImporte());
+            System.out.print("\t\t" + vencimiento.fechaMesLetra());
+            System.out.println("\t"+ importeNeto);
+
         }
     }
-    public float busqueda(int diasVenciemiento){
-        
+    /**
+     * Metodo de busqueda.
+     *
+     * @param valor Del elemento a buscar
+     * @return posicion del valor en contrado -1 en el caso de no encontrarlo
+     */
+    public float busqueda(int valor) {
+        int pos = 0;
+        boolean encontrado = true;
+        while (!encontrado && pos < descuentos.length) {//&& pos < descuentos.length-->NO HARIA FALTA PORQUE SIEMPRE LOVA A ENCONTRAR
+            if (valor > descuentos[pos].getLimite()) {
+                pos++;
+            } else {
+                encontrado = true;
+            }
+            if (!encontrado) {//NO HARIA FALTA PORQUE SIEMPRE LOVA A ENCONTRAR
+                pos = -1;
+            }
+        }
+        return pos;
     }
 
 }
